@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Movement Speed
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MovementSpeed;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
