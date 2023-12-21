@@ -13,3 +13,18 @@ AWandererPlayer::AWandererPlayer() {
   PlayerCamera->SetupAttachment(SpringArm);
 
 }
+
+void AWandererPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AWandererPlayer::MoveForward);
+	PlayerInputComponent->BindAxis("MoveSide", this, &AWandererPlayer::MoveSide);
+}
+
+void AWandererPlayer::MoveForward(float Value) {
+	AddMovementInput(GetActorForwardVector(), Value);
+}
+
+void AWandererPlayer::MoveSide(float Value) {
+	AddMovementInput(GetActorRightVector(), Value);
+}

@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -27,6 +26,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
 
+	virtual void SetupPlayerInputComponent(class UInputComponent* SetupPlayerInputComponent) override;
+
 private:
+	void MoveForward(float Value);
+	void MoveSide(float Value);
 
 };
