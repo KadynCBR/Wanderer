@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 AWandererPlayer::AWandererPlayer() {
   PlayerCamera = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
@@ -16,36 +17,37 @@ AWandererPlayer::AWandererPlayer() {
 }
 
 
-// Making changes here trying to use enhanced
-//void AWandererPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-/*
-void AWandererPlayer::SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent) {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//PlayerInputComponent->BindAxis("MoveForward", this, &AWandererPlayer::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveSide", this, &AWandererPlayer::MoveSide);
-	PlayerInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &AWandererPlayer::MoveForward);
-}
-
-void AWandererPlayer::MoveForward(float Value) {
-	AddMovementInput(GetActorForwardVector(), Value);
-}
-
-*/
-void AWandererPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (EnhancedInputComponent) {
-		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &AWandererPlayer::MoveForward);
-		EnhancedInputComponent->BindAction(MoveSideAction, ETriggerEvent::Triggered, this, &AWandererPlayer::MoveSide);
+void AWandererPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	// Registering the input mapping context with the input subsystem
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController())) {
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer())) {
+			Subsystem->AddMappingContext(InputMappingContext, 0);
+		}
 	}
 }
 
-void AWandererPlayer::MoveForward(float Value) {
-	AddMovementInput(GetActorForwardVector(), Value);
+void AWandererPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	// Cast to use enhanced input features
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+	if (EnhancedInputComponent) {
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AWandererPlayer::OnMove);
+	}
 }
 
-void AWandererPlayer::MoveSide(float Value) {
-	AddMovementInput(GetActorRightVector(), Value);
+// Handle movement input 
+void AWandererPlayer::OnMove(const FInputActionValue& Value) {
+	// use 2D vector (from Kadyn and vid)
+	const FVector2D MovementInput = Value.Get<FVector2D>();
+
+	//UE_LOG(LogTemp, Warning, TEXT("Move Input: %s"), *MovementInput.ToString());
+	
+	// Add movement input for forward and right
+	AddMovementInput(GetActorForwardVector(), MovementInput.Y);
+	AddMovementInput(GetActorRightVector(), MovementInput.X);
 }
+

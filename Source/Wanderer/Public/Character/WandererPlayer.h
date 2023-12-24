@@ -3,16 +3,17 @@
 
 #include "CoreMinimal.h"
 #include "Character/WandererCharacterBase.h"
+#include "InputActionValue.h"
 #include "WandererPlayer.generated.h"
-#include "EnhancedInputComponent.h"
-#include "InputMappingContext.h"
-#include "InputAction.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+class UInputAction;
+class UInputMappingContext;
 
 /**
- * 
+ * AWandererPlayer inherits from AWandererCharacterBase
+ * Used to create player characters using enhanced input
  */
 UCLASS()
 class WANDERER_API AWandererPlayer : public AWandererCharacterBase
@@ -23,25 +24,27 @@ public:
 	AWandererPlayer();
 
 protected:
-	//virtual void SetupPlayerInputComponent(class UInputComponent* SetupPlayerInputComponent) override;
+	// BeginPlay called when the game starts or player is spawned
+	virtual void BeginPlay() override;
+	// SetupPlayer... used to bind input actions
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-	void MoveForward(float Value);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) 
 	UCameraComponent* PlayerCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Input Mapping context for enhanced input mappings
+	UPROPERTY(EditAnywhere, Category=Input)
 	UInputMappingContext* InputMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UInputAction* MoveForwardAction;
+	// Input action for movement. Handles all movement(l,r,f,b)
+	UPROPERTY(EditAnywhere, Category=Input)
+	UInputAction* MoveAction;
+
+	void OnMove(const FInputActionValue& Value);
 
 private:
-	//void MoveForward(float Value);
-	//void MoveSide(float Value);
 
 };
