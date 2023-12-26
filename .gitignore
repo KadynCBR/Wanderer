@@ -1,5 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
+<<<<<<< HEAD
+=======
+.vsconfig
+>>>>>>> d71d154365938ab28373d31b47ed7cbd8eed5130
 
 # Compiled Object files
 *.slo
