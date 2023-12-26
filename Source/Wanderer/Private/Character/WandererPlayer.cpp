@@ -44,8 +44,6 @@ void AWandererPlayer::OnMove(const FInputActionValue& Value) {
 	// use 2D vector (from Kadyn and vid)
 	const FVector2D MovementInput = Value.Get<FVector2D>();
 
-	//UE_LOG(LogTemp, Warning, TEXT("Move Input: %s"), *MovementInput.ToString());
-	
 	// Add movement input for forward and right
 	AddMovementInput(GetActorForwardVector(), MovementInput.Y);
 	AddMovementInput(GetActorRightVector(), MovementInput.X);
