@@ -16,8 +16,14 @@ class WANDERER_API UWandererGameInstance : public UGameInstance
 
 public:
 	void AddExperience(float ToAdd);
-	float GetExperience();
-	int GetLevel();
+	float GetExperience() const;
+	int GetLevel() const;
+	void AddGold(int ToAdd);
+	int GetGold() const;
+	bool SpendGold(int ToSpend);
+	void UnlockLevel(int LevelToUnlock);
+	bool IsLevelUnlocked(int LevelToCheck) const;
+
 
 private:
 	// Unsure if this should be here or in playerstate, it makes more sense to put it here, and reset
@@ -32,6 +38,7 @@ private:
 	/*
 		Level (Per run)
 			reset after death
+			Experience % 100-> 200 experience obtained = level 2
 	*/
 	UPROPERTY()
 	int Level; 
